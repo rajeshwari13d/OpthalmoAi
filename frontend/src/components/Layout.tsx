@@ -1,0 +1,154 @@
+import React from 'react';
+import { Eye, Shield, Stethoscope, Menu, X } from 'lucide-react';
+import { Button, IconButton } from './ui';
+
+interface LayoutProps {
+  children: React.ReactNode;
+}
+
+export const Layout: React.FC<LayoutProps> = ({ children }) => {
+  const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-teal-50/50">
+      {/* Retinal Pattern Background */}
+      <div className="fixed inset-0 opacity-30 pointer-events-none">
+        <div className="absolute top-20 right-20 w-96 h-96 rounded-full bg-gradient-to-r from-teal-200/40 to-blue-200/40 blur-3xl animate-pulse"></div>
+        <div className="absolute bottom-20 left-20 w-80 h-80 rounded-full bg-gradient-to-r from-emerald-200/40 to-teal-200/40 blur-3xl animate-pulse delay-1000"></div>
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full border border-teal-200/30 opacity-50"></div>
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] rounded-full border border-blue-200/30 opacity-40"></div>
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[200px] h-[200px] rounded-full border border-emerald-200/30 opacity-30"></div>
+      </div>
+
+      {/* Navigation */}
+      <nav className="relative bg-white/80 backdrop-blur-md border-b border-slate-200/50 shadow-sm">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center py-4">
+            {/* Logo */}
+            <div className="flex items-center space-x-3">
+              <div className="flex items-center justify-center w-12 h-12 bg-gradient-to-r from-teal-500 to-blue-600 rounded-xl shadow-lg">
+                <Eye className="h-7 w-7 text-white" />
+              </div>
+              <div>
+                <h1 className="text-2xl font-bold bg-gradient-to-r from-teal-600 to-blue-600 bg-clip-text text-transparent">
+                  OpthalmoAI
+                </h1>
+                <p className="text-sm text-slate-500 font-medium">AI-Powered Retinal Screening</p>
+              </div>
+            </div>
+
+            {/* Desktop Navigation */}
+            <div className="hidden md:flex items-center space-x-6">
+              <nav className="flex space-x-1">
+                <a href="#screen" className="px-4 py-2 text-slate-600 hover:text-teal-600 hover:bg-teal-50 rounded-lg transition-all duration-200 font-medium">
+                  Screen
+                </a>
+                <a href="#reports" className="px-4 py-2 text-slate-600 hover:text-teal-600 hover:bg-teal-50 rounded-lg transition-all duration-200 font-medium">
+                  Reports
+                </a>
+                <a href="#about" className="px-4 py-2 text-slate-600 hover:text-teal-600 hover:bg-teal-50 rounded-lg transition-all duration-200 font-medium">
+                  About
+                </a>
+              </nav>
+              <Button variant="outline" size="sm">
+                <Shield className="h-4 w-4 mr-2" />
+                HIPAA Compliant
+              </Button>
+            </div>
+
+            {/* Mobile menu button */}
+            <div className="md:hidden">
+              <IconButton
+                icon={mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+                variant="secondary"
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Mobile Navigation */}
+        {mobileMenuOpen && (
+          <div className="md:hidden bg-white/95 backdrop-blur-md border-t border-slate-200/50">
+            <div className="px-4 py-4 space-y-2">
+              <a href="#screen" className="block px-4 py-3 text-slate-600 hover:text-teal-600 hover:bg-teal-50 rounded-lg transition-all duration-200 font-medium">
+                Screen
+              </a>
+              <a href="#reports" className="block px-4 py-3 text-slate-600 hover:text-teal-600 hover:bg-teal-50 rounded-lg transition-all duration-200 font-medium">
+                Reports
+              </a>
+              <a href="#about" className="block px-4 py-3 text-slate-600 hover:text-teal-600 hover:bg-teal-50 rounded-lg transition-all duration-200 font-medium">
+                About
+              </a>
+              <div className="pt-2">
+                <Button variant="outline" size="sm" className="w-full">
+                  <Shield className="h-4 w-4 mr-2" />
+                  HIPAA Compliant
+                </Button>
+              </div>
+            </div>
+          </div>
+        )}
+      </nav>
+
+      {/* Main Content */}
+      <main className="relative">
+        {children}
+      </main>
+
+      {/* Footer */}
+      <footer className="relative bg-white/60 backdrop-blur-sm border-t border-slate-200/50 mt-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {/* Company Info */}
+            <div>
+              <div className="flex items-center space-x-3 mb-4">
+                <div className="flex items-center justify-center w-10 h-10 bg-gradient-to-r from-teal-500 to-blue-600 rounded-lg">
+                  <Eye className="h-6 w-6 text-white" />
+                </div>
+                <h3 className="text-xl font-bold text-slate-800">OpthalmoAI</h3>
+              </div>
+              <p className="text-slate-600 text-sm leading-relaxed">
+                AI-powered diabetic retinopathy screening platform designed to assist healthcare professionals 
+                in early detection and patient care.
+              </p>
+            </div>
+
+            {/* Medical Disclaimer */}
+            <div>
+              <h4 className="font-semibold text-slate-800 mb-4 flex items-center">
+                <Stethoscope className="h-5 w-5 mr-2 text-teal-600" />
+                Medical Notice
+              </h4>
+              <p className="text-slate-600 text-sm leading-relaxed">
+                This platform is an assistive screening tool and <strong>not a substitute for professional medical diagnosis</strong>. 
+                Always consult with qualified healthcare providers for proper medical evaluation.
+              </p>
+            </div>
+
+            {/* Privacy & Security */}
+            <div>
+              <h4 className="font-semibold text-slate-800 mb-4 flex items-center">
+                <Shield className="h-5 w-5 mr-2 text-teal-600" />
+                Privacy & Security
+              </h4>
+              <ul className="text-slate-600 text-sm space-y-2">
+                <li>• HIPAA-compliant data handling</li>
+                <li>• Encrypted image processing</li>
+                <li>• No permanent data storage</li>
+                <li>• Secure, anonymized analysis</li>
+              </ul>
+            </div>
+          </div>
+
+          <div className="border-t border-slate-200/50 mt-8 pt-8 text-center">
+            <p className="text-slate-500 text-sm">
+              © 2025 OpthalmoAI. Healthcare AI technology for diabetic retinopathy screening. 
+              <span className="text-teal-600 font-medium ml-2">Always consult your healthcare provider.</span>
+            </p>
+          </div>
+        </div>
+      </footer>
+    </div>
+  );
+};

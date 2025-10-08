@@ -1,0 +1,31 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Healthcare data protection rules
+    
+    // Analysis results (anonymous, temporary storage)
+    match /analysis_results/{resultId} {
+      allow read, write: if request.auth != null
+        && resource.data.keys().hasAll(['timestamp', 'analysisId'])
+        && request.time < resource.data.timestamp + duration.value(1, 'd'); // Auto-expire after 1 day
+    }
+    
+    // Anonymous usage analytics (no personal data)
+    match /usage_analytics/{analyticsId} {
+      allow write: if request.auth != null
+        && !('personalData' in request.resource.data)
+        && !('patientInfo' in request.resource.data);
+      allow read: if request.auth != null && request.auth.uid == resource.data.userId;
+    }
+    
+    // Medical disclaimers and compliance logs
+    match /compliance_logs/{logId} {
+      allow read, write: if request.auth != null;
+    }
+    
+    // Default: Deny all other access for HIPAA compliance
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

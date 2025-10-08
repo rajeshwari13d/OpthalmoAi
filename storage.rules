@@ -1,0 +1,48 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    // Temporary image storage for analysis (HIPAA-compliant)
+    match /temp_images/{imageId} {
+      // Allow upload of medical images for analysis
+      allow write: if request.auth != null
+        && resource == null  // Only allow creation, not updates
+        && request.resource.size < 50 * 1024 * 1024  // Max 50MB
+        && request.resource.contentType.matches('image/.*');
+      
+      // Allow read only by the uploader and only for 1 hour
+      allow read: if request.auth != null
+        && request.auth.uid == resource.metadata.uploadedBy
+        && request.time < resource.timeCreated + duration.value(1, 'h');
+      
+      // Auto-delete after analysis (handled by Cloud Functions)
+      allow delete: if request.auth != null;
+    }
+    
+    // Analysis results storage (temporary)
+    match /analysis_results/{resultId} {
+      allow read, write: if request.auth != null
+        && request.time < resource.timeCreated + duration.value(24, 'h');  // 24 hour retention
+    }
+    
+    // Medical compliance: No personal data storage
+    match /medical_images/{imageId} {
+      // Strict rules for any medical imagery
+      allow write: if request.auth != null
+        && resource == null
+        && !('patientId' in resource.metadata)
+        && !('personalInfo' in resource.metadata)
+        && request.resource.contentType.matches('image/.*');
+      
+      allow read: if request.auth != null;
+      
+      // Auto-expire after 24 hours for HIPAA compliance
+      allow delete: if request.auth != null
+        && request.time > resource.timeCreated + duration.value(24, 'h');
+    }
+    
+    // Default: Deny all other access
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}

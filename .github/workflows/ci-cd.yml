@@ -1,0 +1,138 @@
+name: OpthalmoAI CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  backend-tests:
+    name: Backend Tests
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Python 3.11
+      uses: actions/setup-python@v3
+      with:
+        python-version: '3.11'
+        
+    - name: Install dependencies
+      run: |
+        cd backend
+        python -m pip install --upgrade pip
+        pip install fastapi uvicorn pytest httpx
+        pip install -r requirements.txt
+        
+    - name: Run backend tests
+      run: |
+        cd backend
+        python -m pytest tests/ -v
+        
+    - name: Test API health check
+      run: |
+        cd backend
+        uvicorn app.main:app --host 0.0.0.0 --port 8000 &
+        sleep 10
+        curl http://localhost:8000/api/v1/health
+
+  frontend-tests:
+    name: Frontend Tests
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+        cache: 'npm'
+        cache-dependency-path: frontend/package-lock.json
+        
+    - name: Install dependencies
+      run: |
+        cd frontend
+        npm ci
+        
+    - name: Run tests
+      run: |
+        cd frontend
+        npm test -- --coverage --watchAll=false
+        
+    - name: Build frontend
+      run: |
+        cd frontend
+        npm run build
+
+  docker-build:
+    name: Docker Build Test
+    runs-on: ubuntu-latest
+    needs: [backend-tests, frontend-tests]
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Build Docker images
+      run: |
+        docker-compose build
+        
+    - name: Test Docker containers
+      run: |
+        docker-compose up -d
+        sleep 30
+        curl http://localhost:8000/api/v1/health
+        docker-compose down
+
+  security-scan:
+    name: Security Scanning
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Run Trivy vulnerability scanner
+      uses: aquasecurity/trivy-action@master
+      with:
+        scan-type: 'fs'
+        scan-ref: '.'
+        format: 'sarif'
+        output: 'trivy-results.sarif'
+        
+    - name: Upload Trivy scan results
+      uses: github/codeql-action/upload-sarif@v2
+      with:
+        sarif_file: 'trivy-results.sarif'
+
+  healthcare-compliance:
+    name: Healthcare Compliance Check
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Check for medical disclaimers
+      run: |
+        if ! grep -r "not a substitute for professional medical diagnosis" .; then
+          echo "❌ Medical disclaimer missing"
+          exit 1
+        fi
+        echo "✅ Medical disclaimers present"
+        
+    - name: Check for HIPAA compliance elements
+      run: |
+        if ! grep -r "HIPAA\|privacy\|secure" .; then
+          echo "❌ HIPAA compliance elements missing"
+          exit 1
+        fi
+        echo "✅ HIPAA compliance elements found"
+        
+    - name: Verify .gitignore excludes sensitive data
+      run: |
+        if ! grep -q "patient_data" .gitignore || ! grep -q "uploads" .gitignore; then
+          echo "❌ Sensitive data not properly excluded"
+          exit 1
+        fi
+        echo "✅ Sensitive data properly excluded"

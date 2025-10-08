@@ -1,0 +1,157 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&family=Roboto:wght@300;400;500&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  
+  body {
+    @apply bg-clinical-50 text-clinical-900 font-sans;
+    @apply antialiased;
+    margin: 0;
+    line-height: 1.6;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+@layer components {
+  /* Clinical Card Components */
+  .clinical-card {
+    @apply bg-white/80 backdrop-blur-clinical border border-clinical-200/50;
+    @apply rounded-clinical shadow-clinical;
+    @apply transition-all duration-300 ease-in-out;
+  }
+
+  .clinical-card:hover {
+    @apply shadow-medical transform scale-[1.02];
+  }
+
+  .medical-card {
+    @apply bg-gradient-to-br from-white via-medical-50/30 to-medical-100/20;
+    @apply border border-medical-200/30 rounded-retinal shadow-medical;
+    @apply backdrop-blur-medical;
+  }
+
+  /* Clinical Buttons */
+  .btn-medical {
+    @apply inline-flex items-center justify-center;
+    @apply px-6 py-3 rounded-pill;
+    @apply bg-gradient-to-r from-medical-500 to-medical-600;
+    @apply text-white font-medium;
+    @apply shadow-medical hover:shadow-lg;
+    @apply transition-all duration-200 ease-in-out;
+    @apply transform hover:scale-105 hover:from-medical-600 hover:to-medical-700;
+    @apply focus:outline-none focus:ring-4 focus:ring-medical-200;
+  }
+
+  .btn-ai {
+    @apply inline-flex items-center justify-center;
+    @apply px-6 py-3 rounded-pill;
+    @apply bg-gradient-to-r from-ai-500 to-ai-600;
+    @apply text-white font-medium;
+    @apply shadow-ai hover:shadow-lg;
+    @apply transition-all duration-200 ease-in-out;
+    @apply transform hover:scale-105 hover:from-ai-600 hover:to-ai-700;
+    @apply focus:outline-none focus:ring-4 focus:ring-ai-200;
+  }
+
+  .btn-health {
+    @apply inline-flex items-center justify-center;
+    @apply px-6 py-3 rounded-pill;
+    @apply bg-gradient-to-r from-health-500 to-health-600;
+    @apply text-white font-medium;
+    @apply shadow-lg hover:shadow-xl;
+    @apply transition-all duration-200 ease-in-out;
+    @apply transform hover:scale-105 hover:from-health-600 hover:to-health-700;
+    @apply focus:outline-none focus:ring-4 focus:ring-health-200;
+  }
+
+  .btn-outline {
+    @apply inline-flex items-center justify-center;
+    @apply px-6 py-3 rounded-pill;
+    @apply bg-transparent border-2 border-medical-500;
+    @apply text-medical-600 font-medium;
+    @apply hover:bg-medical-50 hover:border-medical-600;
+    @apply transition-all duration-200 ease-in-out;
+    @apply focus:outline-none focus:ring-4 focus:ring-medical-200;
+  }
+
+  /* Typography Classes */
+  .heading-clinical {
+    @apply font-display font-bold text-clinical-900;
+    @apply leading-tight tracking-tight;
+  }
+
+  .heading-medical {
+    @apply font-display font-semibold text-medical-800;
+    @apply leading-relaxed;
+  }
+
+  .text-medical-body {
+    @apply font-sans text-clinical-700 leading-relaxed;
+  }
+
+  /* Retinal Pattern Background */
+  .retinal-pattern {
+    background-image: 
+      radial-gradient(circle at 20% 20%, rgba(20, 184, 166, 0.1) 0%, transparent 50%),
+      radial-gradient(circle at 80% 80%, rgba(59, 130, 246, 0.1) 0%, transparent 50%),
+      radial-gradient(circle at 40% 60%, rgba(34, 197, 94, 0.1) 0%, transparent 50%);
+    background-size: 300px 300px, 400px 400px, 200px 200px;
+    background-position: 0% 0%, 100% 100%, 50% 50%;
+  }
+
+  .retinal-rings {
+    background-image: 
+      radial-gradient(circle, transparent 20%, rgba(20, 184, 166, 0.05) 20.5%, rgba(20, 184, 166, 0.05) 40%, transparent 40.5%),
+      radial-gradient(circle, transparent 40%, rgba(59, 130, 246, 0.05) 40.5%, rgba(59, 130, 246, 0.05) 60%, transparent 60.5%),
+      radial-gradient(circle, transparent 60%, rgba(34, 197, 94, 0.05) 60.5%, rgba(34, 197, 94, 0.05) 80%, transparent 80.5%);
+    background-size: 200px 200px;
+    animation: retinal-scan 8s ease-in-out infinite;
+  }
+
+  /* Upload Zone */
+  .upload-zone {
+    @apply border-2 border-dashed border-medical-300;
+    @apply bg-gradient-to-br from-medical-50/50 to-ai-50/30;
+    @apply rounded-retinal p-8;
+    @apply transition-all duration-300 ease-in-out;
+    @apply hover:border-medical-400 hover:bg-medical-50;
+    @apply focus-within:border-medical-500 focus-within:ring-4 focus-within:ring-medical-200;
+  }
+
+  .upload-zone.dragover {
+    @apply border-medical-500 bg-medical-100 scale-105;
+    @apply shadow-medical;
+  }
+
+  /* Loading Animations */
+  .loading-retinal {
+    @apply w-8 h-8 border-4 border-medical-200;
+    @apply border-t-medical-600 rounded-full;
+    @apply animate-spin;
+  }
+
+  /* Medical Disclaimer Styles */
+  .medical-disclaimer {
+    @apply bg-gradient-to-r from-retinal-50 to-retinal-100;
+    @apply border-l-4 border-retinal-400;
+    @apply p-4 rounded-r-clinical;
+    @apply shadow-sm;
+  }
+
+  /* Glass Morphism Effect */
+  .glass-morphism {
+    background: rgba(255, 255, 255, 0.25);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+  }
+}

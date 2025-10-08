@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OpthalmoAI - AI-Powered Diabetic Retinopathy Screening</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'medical-teal': '#14b8a6',
+                        'medical-blue': '#3b82f6',
+                        'medical-emerald': '#10b981',
+                        'clinical-gray': '#f8fafc'
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.263.1/lucide.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.263.1/lucide.min.js"></script>
+</head>
+<body class="bg-gradient-to-br from-clinical-gray via-white to-medical-teal/5 min-h-screen">
+    <!-- Header -->
+    <header class="bg-white/80 backdrop-blur-sm border-b border-medical-teal/20 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-gradient-to-br from-medical-teal to-medical-blue rounded-xl flex items-center justify-center">
+                        <i data-lucide="eye" class="w-6 h-6 text-white"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-2xl font-bold text-gray-900">OpthalmoAI</h1>
+                        <p class="text-sm text-medical-teal">AI-Powered Retinopathy Screening</p>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800">
+                        <div class="w-2 h-2 bg-emerald-400 rounded-full mr-2 animate-pulse"></div>
+                        API Online
+                    </span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <!-- Hero Section -->
+        <div class="text-center mb-16">
+            <h2 class="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
+                Revolutionizing 
+                <span class="bg-gradient-to-r from-medical-teal via-medical-blue to-medical-emerald bg-clip-text text-transparent">
+                    Diabetic Retinopathy
+                </span>
+                Screening
+            </h2>
+            <p class="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
+                Clinical-grade AI analysis for early detection and risk assessment. 
+                Empowering healthcare professionals with advanced diagnostic support.
+            </p>
+            
+            <!-- Medical Disclaimer -->
+            <div class="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-8 max-w-4xl mx-auto">
+                <div class="flex items-start">
+                    <i data-lucide="alert-triangle" class="w-5 h-5 text-amber-600 mt-0.5 mr-3 flex-shrink-0"></i>
+                    <div class="text-left">
+                        <h3 class="font-semibold text-amber-800 mb-1">Medical Disclaimer</h3>
+                        <p class="text-amber-700 text-sm">
+                            This AI tool is designed to assist healthcare professionals and is not a substitute for professional medical diagnosis. 
+                            Always consult with qualified healthcare providers for medical decisions and patient care.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Status Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+            <!-- API Status -->
+            <div class="bg-white/60 backdrop-blur-sm rounded-2xl p-6 border border-medical-teal/20 shadow-lg">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="w-12 h-12 bg-emerald-100 rounded-xl flex items-center justify-center">
+                        <i data-lucide="server" class="w-6 h-6 text-emerald-600"></i>
+                    </div>
+                    <span class="px-3 py-1 bg-emerald-100 text-emerald-800 rounded-full text-sm font-medium">Active</span>
+                </div>
+                <h3 class="text-lg font-semibold text-gray-900 mb-2">Backend API</h3>
+                <p class="text-gray-600 text-sm mb-4">FastAPI server running with health monitoring</p>
+                <button onclick="checkAPI()" class="w-full bg-emerald-600 text-white px-4 py-2 rounded-lg hover:bg-emerald-700 transition-colors">
+                    Test API Health
+                </button>
+            </div>
+
+            <!-- AI Engine -->
+            <div class="bg-white/60 backdrop-blur-sm rounded-2xl p-6 border border-medical-blue/20 shadow-lg">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
+                        <i data-lucide="brain" class="w-6 h-6 text-blue-600"></i>
+                    </div>
+                    <span class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium">Ready</span>
+                </div>
+                <h3 class="text-lg font-semibold text-gray-900 mb-2">AI Analysis Engine</h3>
+                <p class="text-gray-600 text-sm mb-4">PyTorch infrastructure prepared for model integration</p>
+                <button onclick="viewDocs()" class="w-full bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                    View API Docs
+                </button>
+            </div>
+
+            <!-- Frontend UI -->
+            <div class="bg-white/60 backdrop-blur-sm rounded-2xl p-6 border border-medical-teal/20 shadow-lg">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="w-12 h-12 bg-teal-100 rounded-xl flex items-center justify-center">
+                        <i data-lucide="monitor" class="w-6 h-6 text-teal-600"></i>
+                    </div>
+                    <span class="px-3 py-1 bg-orange-100 text-orange-800 rounded-full text-sm font-medium">Pending</span>
+                </div>
+                <h3 class="text-lg font-semibold text-gray-900 mb-2">Clinical Interface</h3>
+                <p class="text-gray-600 text-sm mb-4">React frontend ready (requires Node.js installation)</p>
+                <button onclick="showInstructions()" class="w-full bg-teal-600 text-white px-4 py-2 rounded-lg hover:bg-teal-700 transition-colors">
+                    Setup Instructions
+                </button>
+            </div>
+        </div>
+
+        <!-- Platform Features -->
+        <div class="bg-white/40 backdrop-blur-sm rounded-3xl p-8 border border-medical-teal/20 shadow-lg mb-16">
+            <h3 class="text-2xl font-bold text-gray-900 mb-6 text-center">Platform Capabilities</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="text-center">
+                    <div class="w-16 h-16 bg-gradient-to-br from-medical-teal to-medical-blue rounded-2xl flex items-center justify-center mx-auto mb-4">
+                        <i data-lucide="camera" class="w-8 h-8 text-white"></i>
+                    </div>
+                    <h4 class="font-semibold text-gray-900 mb-2">Image Capture</h4>
+                    <p class="text-gray-600 text-sm">Camera integration and drag-and-drop upload</p>
+                </div>
+                <div class="text-center">
+                    <div class="w-16 h-16 bg-gradient-to-br from-medical-blue to-medical-emerald rounded-2xl flex items-center justify-center mx-auto mb-4">
+                        <i data-lucide="zap" class="w-8 h-8 text-white"></i>
+                    </div>
+                    <h4 class="font-semibold text-gray-900 mb-2">AI Analysis</h4>
+                    <p class="text-gray-600 text-sm">Real-time processing with confidence scoring</p>
+                </div>
+                <div class="text-center">
+                    <div class="w-16 h-16 bg-gradient-to-br from-medical-emerald to-medical-teal rounded-2xl flex items-center justify-center mx-auto mb-4">
+                        <i data-lucide="file-text" class="w-8 h-8 text-white"></i>
+                    </div>
+                    <h4 class="font-semibold text-gray-900 mb-2">Clinical Reports</h4>
+                    <p class="text-gray-600 text-sm">Professional medical report generation</p>
+                </div>
+                <div class="text-center">
+                    <div class="w-16 h-16 bg-gradient-to-br from-medical-teal to-medical-blue rounded-2xl flex items-center justify-center mx-auto mb-4">
+                        <i data-lucide="shield-check" class="w-8 h-8 text-white"></i>
+                    </div>
+                    <h4 class="font-semibold text-gray-900 mb-2">HIPAA Compliance</h4>
+                    <p class="text-gray-600 text-sm">Healthcare-grade privacy and security</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="bg-gradient-to-r from-medical-teal/10 via-medical-blue/10 to-medical-emerald/10 rounded-3xl p-8 text-center">
+            <h3 class="text-2xl font-bold text-gray-900 mb-4">Ready to Get Started?</h3>
+            <p class="text-gray-600 mb-6">Choose your preferred method to launch the complete OpthalmoAI platform</p>
+            
+            <div class="flex flex-col sm:flex-row gap-4 justify-center max-w-2xl mx-auto">
+                <button onclick="installNodeJS()" class="flex-1 bg-gradient-to-r from-medical-teal to-medical-blue text-white px-6 py-3 rounded-xl hover:shadow-lg transition-all duration-300 font-medium">
+                    <i data-lucide="download" class="w-5 h-5 inline mr-2"></i>
+                    Install Node.js
+                </button>
+                <button onclick="dockerSetup()" class="flex-1 bg-gradient-to-r from-medical-blue to-medical-emerald text-white px-6 py-3 rounded-xl hover:shadow-lg transition-all duration-300 font-medium">
+                    <i data-lucide="box" class="w-5 h-5 inline mr-2"></i>
+                    Docker Setup
+                </button>
+                <button onclick="cloudDeploy()" class="flex-1 bg-gradient-to-r from-medical-emerald to-medical-teal text-white px-6 py-3 rounded-xl hover:shadow-lg transition-all duration-300 font-medium">
+                    <i data-lucide="cloud" class="w-5 h-5 inline mr-2"></i>
+                    Cloud Deploy
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white/80 backdrop-blur-sm border-t border-medical-teal/20 mt-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div class="text-center">
+                <p class="text-gray-600 mb-2">OpthalmoAI - Revolutionizing Diabetic Retinopathy Screening with AI</p>
+                <p class="text-sm text-gray-500">Built with FastAPI, React, and healthcare compliance standards</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+
+        // API Health Check
+        async function checkAPI() {
+            try {
+                const response = await fetch('http://127.0.0.1:8000/api/v1/health');
+                const data = await response.json();
+                alert(`✅ API Health Check Successful!\n\nStatus: ${data.status}\nService: ${data.service}\nVersion: ${data.version}\nTimestamp: ${data.timestamp}`);
+            } catch (error) {
+                alert('❌ API Health Check Failed!\n\nPlease ensure the backend server is running.');
+            }
+        }
+
+        // View API Documentation
+        function viewDocs() {
+            window.open('http://127.0.0.1:8000/docs', '_blank');
+        }
+
+        // Setup Instructions
+        function showInstructions() {
+            alert(`🚀 Complete Frontend Setup Instructions:
+
+1. Install Node.js:
+   • Visit: https://nodejs.org/
+   • Download LTS version
+   • Run installer with defaults
+
+2. Start Frontend:
+   • Open terminal in VS Code
+   • Run: cd frontend
+   • Run: npm install
+   • Run: npm start
+
+3. Access Complete Platform:
+   • Frontend UI: http://localhost:3000
+   • Backend API: http://localhost:8000
+
+Your clinical-grade interface will be ready!`);
+        }
+
+        // Install Node.js Guide
+        function installNodeJS() {
+            alert(`📥 Node.js Installation Guide:
+
+🔹 Method 1: Official Installer (Recommended)
+   • Visit: https://nodejs.org/
+   • Download LTS version (20.x or higher)
+   • Run installer with default settings
+   • Restart VS Code after installation
+
+🔹 Method 2: Windows Package Manager
+   • Open PowerShell as Administrator
+   • Run: winget install OpenJS.NodeJS
+   • Restart terminal
+
+After installation, run in VS Code terminal:
+   cd frontend
+   npm install
+   npm start
+
+Your complete clinical interface will launch!`);
+        }
+
+        // Docker Setup
+        function dockerSetup() {
+            alert(`🐳 Docker Setup Guide:
+
+1. Install Docker Desktop:
+   • Visit: https://www.docker.com/products/docker-desktop/
+   • Download and install
+   • Restart computer if required
+
+2. Build and Run:
+   • Open terminal in project root
+   • Run: docker-compose up --build
+   
+3. Access Platform:
+   • Frontend: http://localhost:3000
+   • Backend: http://localhost:8000
+
+Complete containerized healthcare platform!`);
+        }
+
+        // Cloud Deploy
+        function cloudDeploy() {
+            alert(`☁️ Cloud Deployment Options:
+
+🔹 Firebase Hosting (Recommended):
+   • Install: npm install -g firebase-tools
+   • Login: firebase login
+   • Build: cd frontend && npm run build
+   • Deploy: firebase deploy
+
+🔹 GitHub Pages:
+   • Upload OpthalmoAI-Project.zip to GitHub
+   • Enable GitHub Pages in repository settings
+   • GitHub Actions will build automatically
+
+🔹 Vercel/Netlify:
+   • Connect GitHub repository
+   • Automatic deployment on push
+
+Your AI healthcare platform goes live globally!`);
+        }
+
+        // Auto-check API status on load
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                fetch('http://127.0.0.1:8000/api/v1/health')
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log('✅ OpthalmoAI Backend Online:', data);
+                    })
+                    .catch(error => {
+                        console.log('⚠️ Backend not responding - may need to start server');
+                    });
+            }, 1000);
+        });
+    </script>
+</body>
+</html>
