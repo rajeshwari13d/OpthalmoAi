@@ -1,6 +1,7 @@
 import React from 'react';
-import { Eye, Shield, Stethoscope, Menu, X } from 'lucide-react';
-import { Button, IconButton } from './ui';
+import { Eye, Shield, Stethoscope, Menu, X, Wifi, WifiOff } from 'lucide-react';
+import { Button, IconButton, Badge } from './ui';
+import { useApiHealth } from '../services';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -8,6 +9,7 @@ interface LayoutProps {
 
 export const Layout: React.FC<LayoutProps> = ({ children }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
+  const { isHealthy, isLoading, healthData } = useApiHealth();
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-teal-50/50">
@@ -50,10 +52,26 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
                   About
                 </a>
               </nav>
-              <Button variant="outline" size="sm">
-                <Shield className="h-4 w-4 mr-2" />
-                HIPAA Compliant
-              </Button>
+              <div className="flex items-center space-x-3">
+                {/* API Health Indicator */}
+                <div className="flex items-center space-x-2" title={healthData ? `API Status: ${healthData.status}` : 'Checking API...'}>
+                  {isLoading ? (
+                    <div className="animate-spin w-4 h-4 border-2 border-slate-300 border-t-teal-600 rounded-full"></div>
+                  ) : isHealthy ? (
+                    <Wifi className="h-4 w-4 text-emerald-600" />
+                  ) : (
+                    <WifiOff className="h-4 w-4 text-red-500" />
+                  )}
+                  <Badge variant={isHealthy ? 'success' : 'danger'} className="text-xs">
+                    API {isHealthy ? 'Online' : 'Offline'}
+                  </Badge>
+                </div>
+                
+                <Button variant="outline" size="sm">
+                  <Shield className="h-4 w-4 mr-2" />
+                  HIPAA Compliant
+                </Button>
+              </div>
             </div>
 
             {/* Mobile menu button */}
@@ -152,3 +170,5 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
     </div>
   );
 };
+
+export default Layout;

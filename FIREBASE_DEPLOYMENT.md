@@ -1,8 +1,16 @@
-# 🔥 OpthalmoAI Firebase Cloud Deployment Guide
+# OpthalmoAI Firebase Hosting Deployment Guide
 
-## 🎯 **Firebase Project: opthalmoai.firebaseapp.com**
+## � Frontend Deployment Commands
 
-Your OpthalmoAI platform is now configured for Firebase cloud deployment with healthcare-compliant security rules and HIPAA-style data protection.
+### Prerequisites
+```bash
+npm install -g firebase-tools
+```
+
+### Verify Firebase Configuration
+```bash
+firebase hosting:sites:list
+```
 
 ---
 

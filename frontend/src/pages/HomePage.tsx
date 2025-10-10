@@ -18,13 +18,16 @@ import {
 } from 'lucide-react';
 
 interface AnalysisResult {
+  id: string;
   stage: number;
   confidence: number;
   riskLevel: 'low' | 'moderate' | 'high';
   recommendations: string[];
+  timestamp: string;
 }
 
 const HomePage: React.FC = () => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [analysisResult, setAnalysisResult] = useState<AnalysisResult | null>(null);
   const [currentStep, setCurrentStep] = useState<'upload' | 'results'>('upload');

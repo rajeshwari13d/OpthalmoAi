@@ -7,6 +7,10 @@ class Settings(BaseSettings):
     API_V1_STR: str = "/api/v1"
     PROJECT_NAME: str = "OpthalmoAI"
     
+    # Development Settings
+    DEBUG: bool = False
+    ENVIRONMENT: str = "production"
+    
     # Security
     SECRET_KEY: str = "your-secret-key-change-this-in-production"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
@@ -28,11 +32,19 @@ class Settings(BaseSettings):
                               "for professional medical diagnosis. Always consult with a "
                               "qualified healthcare professional.")
     
+    # Database Settings
+    DATABASE_URL: str = "sqlite:///./opthalmoai.db"
+    
+    # Data Retention (compliance)
+    DATA_RETENTION_DAYS: int = 90  # Keep records for 90 days
+    ENABLE_AUDIT_LOGGING: bool = True
+    
     # Logging
     LOG_LEVEL: str = "INFO"
     
     class Config:
         env_file = ".env"
         case_sensitive = True
+        extra = "ignore"  # Ignore extra environment variables
 
 settings = Settings()

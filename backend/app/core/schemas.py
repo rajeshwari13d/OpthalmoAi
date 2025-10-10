@@ -20,6 +20,7 @@ class ImageUploadResponse(BaseModel):
     file_name: str
 
 class AnalysisResult(BaseModel):
+    id: Optional[str] = Field(None, description="Unique analysis record ID")
     stage: DiabeticRetinopathyStage = Field(..., description="Diabetic retinopathy stage (0-4)")
     stage_description: str = Field(..., description="Human-readable stage description")
     confidence: float = Field(..., ge=0.0, le=100.0, description="Confidence percentage")

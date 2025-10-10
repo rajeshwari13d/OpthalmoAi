@@ -1,0 +1,34 @@
+{
+  "folders": [
+    {
+      "path": "./frontend"
+    },
+    {
+      "path": "./backend"
+    }
+  ],
+  "settings": {
+    "typescript.preferences.includePackageJsonAutoImports": "auto",
+    "typescript.suggest.autoImports": true,
+    "tailwindCSS.includeLanguages": {
+      "typescript": "javascript",
+      "typescriptreact": "javascript"
+    },
+    "css.validate": false,
+    "files.associations": {
+      "*.css": "tailwindcss"
+    },
+    "editor.quickSuggestions": {
+      "strings": true
+    },
+    "python.defaultInterpreterPath": "./backend/.venv/Scripts/python.exe"
+  },
+  "extensions": {
+    "recommendations": [
+      "bradlc.vscode-tailwindcss",
+      "ms-python.python",
+      "ms-typescript.vscode-typescript-next",
+      "esbenp.prettier-vscode"
+    ]
+  }
+}

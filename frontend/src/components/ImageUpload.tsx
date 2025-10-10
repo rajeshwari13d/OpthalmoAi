@@ -1,6 +1,7 @@
 import React, { useState, useCallback, useRef } from 'react';
 import { Upload, Camera, FileImage, AlertCircle, Check, Eye, Loader2 } from 'lucide-react';
 import { Button, Card, Alert, Progress, Badge } from './ui';
+import { analysisService } from '../services';
 
 interface ImageUploadProps {
   onImageSelect: (file: File) => void;
@@ -8,10 +9,12 @@ interface ImageUploadProps {
 }
 
 interface AnalysisResult {
+  id: string;
   stage: number;
   confidence: number;
   riskLevel: 'low' | 'moderate' | 'high';
   recommendations: string[];
+  timestamp: string;
 }
 
 export const ImageUpload: React.FC<ImageUploadProps> = ({ onImageSelect, onAnalysisComplete }) => {
@@ -115,6 +118,14 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({ onImageSelect, onAnaly
     }
   }, []);
 
+  const stopCamera = useCallback(() => {
+    if (videoRef.current && videoRef.current.srcObject) {
+      const stream = videoRef.current.srcObject as MediaStream;
+      stream.getTracks().forEach(track => track.stop());
+      setCameraActive(false);
+    }
+  }, []);
+
   const captureImage = useCallback(() => {
     if (videoRef.current && canvasRef.current) {
       const video = videoRef.current;
@@ -135,53 +146,71 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({ onImageSelect, onAnaly
         }, 'image/jpeg', 0.9);
       }
     }
-  }, [handleFileSelect]);
+  }, [handleFileSelect, stopCamera]);
 
-  const stopCamera = useCallback(() => {
-    if (videoRef.current && videoRef.current.srcObject) {
-      const stream = videoRef.current.srcObject as MediaStream;
-      stream.getTracks().forEach(track => track.stop());
-      setCameraActive(false);
-    }
-  }, []);
-
-  const simulateAnalysis = useCallback(async () => {
+  const analyzeImage = useCallback(async () => {
     if (!selectedFile) return;
 
     setAnalyzing(true);
     setAnalysisProgress(0);
+    setError(null);
 
-    // Simulate AI analysis with progress updates
-    const steps = [
-      { progress: 20, message: 'Preprocessing retinal image...' },
-      { progress: 45, message: 'Running AI model inference...' },
-      { progress: 70, message: 'Analyzing retinal features...' },
-      { progress: 90, message: 'Generating medical insights...' },
-      { progress: 100, message: 'Analysis complete!' }
-    ];
+    try {
+      // Show progress updates while analysis is happening
+      const progressUpdates = [
+        { progress: 10, message: 'Uploading image...' },
+        { progress: 30, message: 'Preprocessing retinal image...' },
+        { progress: 50, message: 'Running AI model inference...' },
+        { progress: 70, message: 'Analyzing retinal features...' },
+        { progress: 90, message: 'Generating medical insights...' }
+      ];
 
-    for (const step of steps) {
-      await new Promise(resolve => setTimeout(resolve, 800));
-      setAnalysisProgress(step.progress);
-    }
+      // Start progress simulation
+      const progressInterval = setInterval(() => {
+        const currentStep = progressUpdates.find(step => step.progress > analysisProgress);
+        if (currentStep && analysisProgress < currentStep.progress) {
+          setAnalysisProgress(prev => Math.min(prev + 2, currentStep.progress));
+        }
+      }, 100);
 
-    // Simulate analysis result
-    const mockResult: AnalysisResult = {
-      stage: Math.floor(Math.random() * 5),
-      confidence: 0.75 + Math.random() * 0.25,
-      riskLevel: Math.random() > 0.7 ? 'high' : Math.random() > 0.4 ? 'moderate' : 'low',
-      recommendations: [
-        'Schedule follow-up examination with ophthalmologist',
-        'Monitor blood glucose levels closely',
-        'Continue prescribed diabetes medication'
-      ]
-    };
+      // Make API call to analyze image
+      const response = await analysisService.analyzeImage(selectedFile);
 
-    setTimeout(() => {
+      clearInterval(progressInterval);
+      setAnalysisProgress(100);
+
+      if (response.success && response.data) {
+        const apiResult = response.data.result;
+        
+        // Convert API result to component format
+        const analysisResult: AnalysisResult = {
+          id: apiResult.id,
+          stage: apiResult.stage,
+          confidence: apiResult.confidence,
+          riskLevel: apiResult.riskLevel,
+          recommendations: apiResult.recommendations,
+          timestamp: apiResult.timestamp
+        };
+
+        setTimeout(() => {
+          setAnalyzing(false);
+          onAnalysisComplete?.(analysisResult);
+        }, 500);
+
+      } else {
+        throw new Error(response.error || 'Analysis failed');
+      }
+
+    } catch (error) {
       setAnalyzing(false);
-      onAnalysisComplete?.(mockResult);
-    }, 500);
-  }, [selectedFile, onAnalysisComplete]);
+      setAnalysisProgress(0);
+      
+      const errorMessage = error instanceof Error ? error.message : 'Analysis failed. Please try again.';
+      setError(errorMessage);
+      
+      console.error('Analysis error:', error);
+    }
+  }, [selectedFile, onAnalysisComplete, analysisProgress]);
 
   return (
     <div className="space-y-6">
@@ -345,7 +374,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({ onImageSelect, onAnaly
         {preview && !analyzing && (
           <div className="mt-6 flex justify-center">
             <Button
-              onClick={simulateAnalysis}
+              onClick={analyzeImage}
               size="lg"
               className="min-w-[200px]"
               loading={analyzing}
