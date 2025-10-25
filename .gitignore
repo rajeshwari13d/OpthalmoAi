@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Dependencies
 node_modules/
 npm-debug.log*
@@ -91,3 +92,10 @@ patient_data/
 # VS Code
 .vscode/launch.json
 .vscode/tasks.json
+=======
+# Object file
+*.o
+
+# Ada Library Information
+*.ali
+>>>>>>> 78c3e017cea1948a2b8ba87d48ac0e33a77e3535
