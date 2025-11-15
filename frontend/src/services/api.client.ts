@@ -17,7 +17,7 @@ class ApiClient {
   private timeout: number;
 
   constructor() {
-    this.baseUrl = API_CONFIG.BASE_URL + API_CONFIG.API_VERSION;
+    this.baseUrl = API_CONFIG.BASE_URL;
     this.timeout = API_CONFIG.TIMEOUT;
   }
 

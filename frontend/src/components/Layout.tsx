@@ -1,5 +1,6 @@
 import React from 'react';
-import { Eye, Shield, Stethoscope, Menu, X, Wifi, WifiOff } from 'lucide-react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { Eye, Shield, Stethoscope, Menu, X, Wifi, WifiOff, Home } from 'lucide-react';
 import { Button, IconButton, Badge } from './ui';
 import { useApiHealth } from '../services';
 
@@ -10,6 +11,13 @@ interface LayoutProps {
 export const Layout: React.FC<LayoutProps> = ({ children }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
   const { isHealthy, isLoading, healthData } = useApiHealth();
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const handleNavigation = (path: string) => {
+    navigate(path);
+    setMobileMenuOpen(false);
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-teal-50/50">
@@ -26,10 +34,14 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
       <nav className="relative bg-white/80 backdrop-blur-md border-b border-slate-200/50 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4">
-            {/* Logo */}
-            <div className="flex items-center space-x-3">
-              <div className="flex items-center justify-center w-12 h-12 bg-gradient-to-r from-teal-500 to-blue-600 rounded-xl shadow-lg">
-                <Eye className="h-7 w-7 text-white" />
+            {/* Logo - Make it clickable */}
+            <div className="flex items-center space-x-3 cursor-pointer" onClick={() => handleNavigation('/')}>
+              <div className="w-12 h-12 bg-white/10 backdrop-blur-sm rounded-xl shadow-lg flex items-center justify-center border border-white/20">
+                <img 
+                  src="/opthalmo-icon.svg" 
+                  alt="OpthalmoAI" 
+                  className="w-10 h-10 drop-shadow-sm"
+                />
               </div>
               <div>
                 <h1 className="text-2xl font-bold bg-gradient-to-r from-teal-600 to-blue-600 bg-clip-text text-transparent">
@@ -42,15 +54,57 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
             {/* Desktop Navigation */}
             <div className="hidden md:flex items-center space-x-6">
               <nav className="flex space-x-1">
-                <a href="#screen" className="px-4 py-2 text-slate-600 hover:text-teal-600 hover:bg-teal-50 rounded-lg transition-all duration-200 font-medium">
+                <button 
+                  onClick={() => handleNavigation('/')}
+                  className={`px-4 py-2 rounded-lg transition-all duration-200 font-medium ${
+                    location.pathname === '/' 
+                      ? 'text-teal-600 bg-teal-50' 
+                      : 'text-slate-600 hover:text-teal-600 hover:bg-teal-50'
+                  }`}
+                >
+                  <Home className="h-4 w-4 inline mr-2" />
+                  Dashboard
+                </button>
+                <button 
+                  onClick={() => handleNavigation('/upload')}
+                  className={`px-4 py-2 rounded-lg transition-all duration-200 font-medium ${
+                    location.pathname === '/upload' || location.pathname === '/capture'
+                      ? 'text-teal-600 bg-teal-50' 
+                      : 'text-slate-600 hover:text-teal-600 hover:bg-teal-50'
+                  }`}
+                >
                   Screen
-                </a>
-                <a href="#reports" className="px-4 py-2 text-slate-600 hover:text-teal-600 hover:bg-teal-50 rounded-lg transition-all duration-200 font-medium">
+                </button>
+                <button 
+                  onClick={() => handleNavigation('/reports')}
+                  className={`px-4 py-2 rounded-lg transition-all duration-200 font-medium ${
+                    location.pathname === '/reports' 
+                      ? 'text-teal-600 bg-teal-50' 
+                      : 'text-slate-600 hover:text-teal-600 hover:bg-teal-50'
+                  }`}
+                >
                   Reports
-                </a>
-                <a href="#about" className="px-4 py-2 text-slate-600 hover:text-teal-600 hover:bg-teal-50 rounded-lg transition-all duration-200 font-medium">
+                </button>
+                <button 
+                  onClick={() => handleNavigation('/analytics')}
+                  className={`px-4 py-2 rounded-lg transition-all duration-200 font-medium ${
+                    location.pathname === '/analytics' 
+                      ? 'text-teal-600 bg-teal-50' 
+                      : 'text-slate-600 hover:text-teal-600 hover:bg-teal-50'
+                  }`}
+                >
+                  Analytics
+                </button>
+                <button 
+                  onClick={() => handleNavigation('/home')}
+                  className={`px-4 py-2 rounded-lg transition-all duration-200 font-medium ${
+                    location.pathname === '/home' 
+                      ? 'text-teal-600 bg-teal-50' 
+                      : 'text-slate-600 hover:text-teal-600 hover:bg-teal-50'
+                  }`}
+                >
                   About
-                </a>
+                </button>
               </nav>
               <div className="flex items-center space-x-3">
                 {/* API Health Indicator */}
@@ -89,15 +143,57 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
         {mobileMenuOpen && (
           <div className="md:hidden bg-white/95 backdrop-blur-md border-t border-slate-200/50">
             <div className="px-4 py-4 space-y-2">
-              <a href="#screen" className="block px-4 py-3 text-slate-600 hover:text-teal-600 hover:bg-teal-50 rounded-lg transition-all duration-200 font-medium">
+              <button 
+                onClick={() => handleNavigation('/')}
+                className={`flex items-center w-full text-left px-4 py-3 rounded-lg transition-all duration-200 font-medium ${
+                  location.pathname === '/' 
+                    ? 'text-teal-600 bg-teal-50' 
+                    : 'text-slate-600 hover:text-teal-600 hover:bg-teal-50'
+                }`}
+              >
+                <Home className="h-4 w-4 mr-3" />
+                Dashboard
+              </button>
+              <button 
+                onClick={() => handleNavigation('/upload')}
+                className={`block w-full text-left px-4 py-3 rounded-lg transition-all duration-200 font-medium ${
+                  location.pathname === '/upload' || location.pathname === '/capture'
+                    ? 'text-teal-600 bg-teal-50' 
+                    : 'text-slate-600 hover:text-teal-600 hover:bg-teal-50'
+                }`}
+              >
                 Screen
-              </a>
-              <a href="#reports" className="block px-4 py-3 text-slate-600 hover:text-teal-600 hover:bg-teal-50 rounded-lg transition-all duration-200 font-medium">
+              </button>
+              <button 
+                onClick={() => handleNavigation('/reports')}
+                className={`block w-full text-left px-4 py-3 rounded-lg transition-all duration-200 font-medium ${
+                  location.pathname === '/reports' 
+                    ? 'text-teal-600 bg-teal-50' 
+                    : 'text-slate-600 hover:text-teal-600 hover:bg-teal-50'
+                }`}
+              >
                 Reports
-              </a>
-              <a href="#about" className="block px-4 py-3 text-slate-600 hover:text-teal-600 hover:bg-teal-50 rounded-lg transition-all duration-200 font-medium">
+              </button>
+              <button 
+                onClick={() => handleNavigation('/analytics')}
+                className={`block w-full text-left px-4 py-3 rounded-lg transition-all duration-200 font-medium ${
+                  location.pathname === '/analytics' 
+                    ? 'text-teal-600 bg-teal-50' 
+                    : 'text-slate-600 hover:text-teal-600 hover:bg-teal-50'
+                }`}
+              >
+                Analytics
+              </button>
+              <button 
+                onClick={() => handleNavigation('/home')}
+                className={`block w-full text-left px-4 py-3 rounded-lg transition-all duration-200 font-medium ${
+                  location.pathname === '/home' 
+                    ? 'text-teal-600 bg-teal-50' 
+                    : 'text-slate-600 hover:text-teal-600 hover:bg-teal-50'
+                }`}
+              >
                 About
-              </a>
+              </button>
               <div className="pt-2">
                 <Button variant="outline" size="sm" className="w-full">
                   <Shield className="h-4 w-4 mr-2" />
@@ -121,8 +217,12 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
             {/* Company Info */}
             <div>
               <div className="flex items-center space-x-3 mb-4">
-                <div className="flex items-center justify-center w-10 h-10 bg-gradient-to-r from-teal-500 to-blue-600 rounded-lg">
-                  <Eye className="h-6 w-6 text-white" />
+                <div className="w-10 h-10 bg-gradient-to-br from-teal-100 to-blue-100 rounded-lg shadow-sm flex items-center justify-center">
+                  <img 
+                    src="/opthalmo-icon.svg" 
+                    alt="OpthalmoAI" 
+                    className="w-8 h-8"
+                  />
                 </div>
                 <h3 className="text-xl font-bold text-slate-800">OpthalmoAI</h3>
               </div>
@@ -163,6 +263,9 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
             <p className="text-slate-500 text-sm">
               © 2025 OpthalmoAI. Healthcare AI technology for diabetic retinopathy screening. 
               <span className="text-teal-600 font-medium ml-2">Always consult your healthcare provider.</span>
+            </p>
+            <p className="text-slate-400 text-xs mt-2">
+              Developed by <span className="font-medium text-teal-500">Pimpre</span>
             </p>
           </div>
         </div>

@@ -1,6 +1,6 @@
 {
   "hosting": {
-    "site": "opthalmoai-demo",
+    "site": "opthalmoai",
     "public": "build",
     "ignore": [
       "firebase.json",
@@ -8,13 +8,6 @@
       "**/node_modules/**"
     ],
     "rewrites": [
-      {
-        "source": "/api/**",
-        "run": {
-          "serviceId": "opthalmoai-api",
-          "region": "us-central1"
-        }
-      },
       {
         "source": "**",
         "destination": "/index.html"

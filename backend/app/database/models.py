@@ -82,7 +82,8 @@ def get_database_url():
 engine = create_engine(
     get_database_url(),
     echo=False,  # Set to True for SQL debugging
-    pool_pre_ping=True
+    pool_pre_ping=True,
+    connect_args={"check_same_thread": False} if "sqlite" in get_database_url() else {}
 )
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)

@@ -2,6 +2,7 @@
 export * from './api.config';
 export * from './api.client';
 export * from './hooks';
+export * from './data.service';
 
 // Re-export commonly used services for convenience
 export { 
@@ -9,6 +10,8 @@ export {
   analysisService, 
   apiClient 
 } from './api.client';
+
+export { dataService } from './data.service';
 
 export { useApiHealth } from './hooks';
 

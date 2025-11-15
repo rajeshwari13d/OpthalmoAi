@@ -76,8 +76,13 @@ async def analyze_retinal_image(
             )
         
         # Perform analysis
-        if not model_loader.model_loaded:
-            raise HTTPException(status_code=503, detail="Model not available")
+        if not model_loader.models_loaded:
+            # Try to load models if not already loaded
+            try:
+                model_loader.load_models()
+            except Exception as model_error:
+                logger.error(f"Failed to load models: {model_error}")
+                raise HTTPException(status_code=503, detail="AI models not available")
         
         analysis_result = model_loader.predict(image)
         
@@ -204,8 +209,9 @@ async def upload_image(file: UploadFile = File(...)):
 async def get_model_info():
     """Get information about the loaded model"""
     return {
-        "model_type": settings.MODEL_TYPE,
-        "model_loaded": model_loader.model_loaded,
+        "model_type": "ResNet50 + VGG16 Ensemble",
+        "models_loaded": model_loader.models_loaded,
+        "ensemble_mode": model_loader.ensemble_mode,
         "device": str(model_loader.device),
         "classes": [
             "No Diabetic Retinopathy (Stage 0)",
@@ -216,7 +222,11 @@ async def get_model_info():
         ],
         "input_size": "224x224 pixels",
         "supported_formats": settings.ALLOWED_EXTENSIONS,
-        "max_file_size_mb": settings.MAX_FILE_SIZE // (1024*1024)
+        "max_file_size_mb": settings.MAX_FILE_SIZE // (1024*1024),
+        "models": {
+            "resnet50": model_loader.resnet50_model is not None,
+            "vgg16": model_loader.vgg16_model is not None
+        }
     }
 
 @router.get("/history")

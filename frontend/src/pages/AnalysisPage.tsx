@@ -129,10 +129,10 @@ const AnalysisPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-teal-50/50 py-8">
-      <div className="max-w-4xl mx-auto px-4">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-teal-50/50 py-4 sm:py-8">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="mb-8">
+        <div className="mb-6 sm:mb-8">
           <Button
             variant="ghost"
             onClick={handleGoBack}
@@ -144,14 +144,14 @@ const AnalysisPage: React.FC = () => {
           
           <div className="text-center">
             <div className="flex items-center justify-center mb-4">
-              <div className="flex items-center justify-center w-16 h-16 bg-gradient-to-r from-teal-500 to-blue-600 rounded-2xl shadow-lg">
-                <Brain className="h-8 w-8 text-white" />
+              <div className="flex items-center justify-center w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-r from-teal-500 to-blue-600 rounded-2xl shadow-lg">
+                <Brain className="h-6 w-6 sm:h-8 sm:w-8 text-white" />
               </div>
             </div>
-            <h1 className="text-4xl font-bold bg-gradient-to-r from-teal-600 to-blue-600 bg-clip-text text-transparent mb-2">
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-teal-600 to-blue-600 bg-clip-text text-transparent mb-2">
               AI Analysis Center
             </h1>
-            <p className="text-slate-600 text-lg max-w-2xl mx-auto">
+            <p className="text-slate-600 text-sm sm:text-base lg:text-lg max-w-2xl mx-auto px-4">
               Upload your retinal fundus image for comprehensive diabetic retinopathy screening using advanced AI technology.
             </p>
           </div>
@@ -159,15 +159,15 @@ const AnalysisPage: React.FC = () => {
 
         {/* Analysis Flow */}
         {!analysisState.isAnalyzing ? (
-          <div className="space-y-8">
+          <div className="space-y-6 sm:space-y-8">
             {/* Image Upload Section */}
-            <Card className="p-8" glow={!!analysisState.file}>
-              <div className="text-center mb-6">
-                <Eye className="w-12 h-12 mx-auto text-teal-600 mb-4" />
-                <h2 className="text-2xl font-bold text-slate-800 mb-2">
+            <Card className="p-4 sm:p-6 lg:p-8" glow={!!analysisState.file}>
+              <div className="text-center mb-4 sm:mb-6">
+                <Eye className="w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 mx-auto text-teal-600 mb-4" />
+                <h2 className="text-xl sm:text-2xl font-bold text-slate-800 mb-2">
                   Upload Fundus Image
                 </h2>
-                <p className="text-slate-600">
+                <p className="text-slate-600 text-sm sm:text-base px-4">
                   Select a high-quality retinal fundus photograph for analysis
                 </p>
               </div>
@@ -186,15 +186,15 @@ const AnalysisPage: React.FC = () => {
 
             {/* Analysis Controls */}
             {analysisState.file && (
-              <Card className="p-6">
-                <div className="flex items-center justify-between">
+              <Card className="p-4 sm:p-6">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
                   <div className="flex items-center space-x-4">
-                    <div className="flex items-center justify-center w-12 h-12 bg-emerald-100 rounded-lg">
-                      <CheckCircle className="w-6 h-6 text-emerald-600" />
+                    <div className="flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 bg-emerald-100 rounded-lg flex-shrink-0">
+                      <CheckCircle className="w-5 h-5 sm:w-6 sm:h-6 text-emerald-600" />
                     </div>
-                    <div>
-                      <h3 className="font-semibold text-slate-800">Image Ready for Analysis</h3>
-                      <p className="text-sm text-slate-600">
+                    <div className="min-w-0 flex-1">
+                      <h3 className="font-semibold text-slate-800 text-sm sm:text-base">Image Ready for Analysis</h3>
+                      <p className="text-xs sm:text-sm text-slate-600 truncate">
                         File: {analysisState.file.name} ({Math.round(analysisState.file.size / 1024)} KB)
                       </p>
                     </div>
@@ -203,7 +203,7 @@ const AnalysisPage: React.FC = () => {
                   <Button
                     onClick={handleStartAnalysis}
                     size="lg"
-                    className="flex items-center space-x-2"
+                    className="flex items-center justify-center space-x-2 w-full sm:w-auto min-h-[48px]"
                   >
                     <Activity className="w-5 h-5" />
                     <span>Start AI Analysis</span>
@@ -214,21 +214,21 @@ const AnalysisPage: React.FC = () => {
           </div>
         ) : (
           /* Analysis Progress */
-          <Card className="p-8">
+          <Card className="p-6 sm:p-8">
             <div className="text-center">
               <div className="flex items-center justify-center mb-6">
                 <div className="relative">
                   <LoadingSpinner size="lg" />
                   <div className="absolute inset-0 flex items-center justify-center">
-                    <Brain className="w-8 h-8 text-teal-600 animate-pulse" />
+                    <Brain className="w-6 h-6 sm:w-8 sm:h-8 text-teal-600 animate-pulse" />
                   </div>
                 </div>
               </div>
               
-              <h2 className="text-2xl font-bold text-slate-800 mb-2">
+              <h2 className="text-xl sm:text-2xl font-bold text-slate-800 mb-2">
                 Analyzing Retinal Image
               </h2>
-              <p className="text-slate-600 mb-6">
+              <p className="text-slate-600 mb-6 text-sm sm:text-base px-4">
                 Our AI is carefully examining your fundus image for signs of diabetic retinopathy
               </p>
 

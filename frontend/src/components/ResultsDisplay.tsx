@@ -22,6 +22,12 @@ interface AnalysisResult {
   recommendations: string[];
   timestamp?: string;
   imageUrl?: string;
+  stageName?: string;
+  imageQuality?: {
+    qualityScore: number;
+    brightness: number;
+    contrast: number;
+  };
 }
 
 interface ResultsDisplayProps {

@@ -17,7 +17,7 @@ async def health_check():
     
     return HealthResponse(
         status="healthy",
-        model_loaded=model_loader.model_loaded,
+        model_loaded=model_loader.models_loaded,
         version="1.0.0",
         uptime=round(uptime, 2)
     )
@@ -35,7 +35,7 @@ async def detailed_health_check():
         "status": "healthy",
         "version": "1.0.0",
         "uptime_seconds": round(uptime, 2),
-        "model_loaded": model_loader.model_loaded,
+        "model_loaded": model_loader.models_loaded,
         "system": {
             "cpu_count": psutil.cpu_count(),
             "cpu_percent": psutil.cpu_percent(),
@@ -52,8 +52,8 @@ async def detailed_health_check():
             }
         },
         "model": {
-            "type": "ResNet50" if hasattr(model_loader.model, 'fc') else "VGG16",
+            "type": "Custom Trained" if model_loader.use_custom_model else "Ensemble",
             "device": str(model_loader.device),
-            "loaded": model_loader.model_loaded
+            "loaded": model_loader.models_loaded
         }
     }

@@ -20,6 +20,8 @@ class ImageUploadResponse(BaseModel):
     file_name: str
 
 class AnalysisResult(BaseModel):
+    model_config = {"protected_namespaces": ()}
+    
     id: Optional[str] = Field(None, description="Unique analysis record ID")
     stage: DiabeticRetinopathyStage = Field(..., description="Diabetic retinopathy stage (0-4)")
     stage_description: str = Field(..., description="Human-readable stage description")
@@ -27,6 +29,7 @@ class AnalysisResult(BaseModel):
     risk_level: RiskLevel = Field(..., description="Risk level assessment")
     recommendations: List[str] = Field(..., description="Clinical recommendations")
     processing_time: float = Field(..., description="Processing time in seconds")
+    model_info: Optional[dict] = Field(None, description="Model ensemble information")
 
 class AnalysisResponse(BaseModel):
     success: bool
@@ -36,6 +39,8 @@ class AnalysisResponse(BaseModel):
     timestamp: str
 
 class HealthResponse(BaseModel):
+    model_config = {"protected_namespaces": ()}
+    
     status: str
     model_loaded: bool
     version: str

@@ -8,15 +8,15 @@ from contextlib import asynccontextmanager
 
 from app.api.endpoints import analysis, health
 from app.core.config import settings
-from app.models.model_loader import ModelLoader
+from app.models.model_loader import model_loader
 
 # Initialize model loader
-model_loader = ModelLoader()
+# model_loader is already imported as global instance
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # Startup: Load the ML model
-    model_loader.load_model()
+    model_loader.load_models()
     yield
     # Shutdown: Cleanup if needed
     pass
@@ -31,7 +31,7 @@ app = FastAPI(
 # CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "http://127.0.0.1:3000"],
+    allow_origins=settings.BACKEND_CORS_ORIGINS,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

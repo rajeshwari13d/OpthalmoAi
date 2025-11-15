@@ -15,6 +15,12 @@ interface AnalysisResult {
   riskLevel: 'low' | 'moderate' | 'high';
   recommendations: string[];
   timestamp: string;
+  stageName?: string;
+  imageQuality?: {
+    qualityScore: number;
+    brightness: number;
+    contrast: number;
+  };
 }
 
 export const ImageUpload: React.FC<ImageUploadProps> = ({ onImageSelect, onAnalysisComplete }) => {
@@ -237,16 +243,16 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({ onImageSelect, onAnaly
               ref={videoRef}
               autoPlay
               playsInline
-              className="w-full h-64 object-cover rounded-lg bg-slate-100"
+              className="w-full h-48 sm:h-64 object-cover rounded-lg bg-slate-100"
             />
             <canvas ref={canvasRef} className="hidden" />
             <div className="absolute inset-0 flex items-center justify-center bg-black/10">
-              <div className="flex space-x-4">
-                <Button onClick={captureImage} size="lg">
+              <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4">
+                <Button onClick={captureImage} size="lg" className="min-h-[48px]">
                   <Camera className="h-5 w-5 mr-2" />
                   Capture Image
                 </Button>
-                <Button variant="outline" onClick={stopCamera}>
+                <Button variant="outline" onClick={stopCamera} className="min-h-[48px]">
                   Cancel
                 </Button>
               </div>
@@ -260,7 +266,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({ onImageSelect, onAnaly
             <img
               src={preview}
               alt="Retinal scan preview"
-              className="w-full h-64 object-cover rounded-lg"
+              className="w-full h-48 sm:h-64 object-cover rounded-lg"
             />
             <div className="absolute top-4 right-4">
               <Badge variant="success">
@@ -274,7 +280,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({ onImageSelect, onAnaly
         {/* Upload Area */}
         {!preview && !cameraActive && (
           <div
-            className={`relative border-2 border-dashed rounded-2xl p-12 text-center transition-all duration-300 ${
+            className={`relative border-2 border-dashed rounded-2xl p-6 sm:p-8 lg:p-12 text-center transition-all duration-300 ${
               dragActive 
                 ? 'border-teal-400 bg-teal-50/50 transform scale-105' 
                 : 'border-slate-300 hover:border-teal-300 hover:bg-teal-50/30'
@@ -292,30 +298,30 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({ onImageSelect, onAnaly
               className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
             />
 
-            <div className="space-y-6">
+            <div className="space-y-4 sm:space-y-6">
               <div className="flex justify-center">
-                <div className="flex items-center justify-center w-20 h-20 bg-gradient-to-r from-teal-500 to-blue-600 rounded-2xl shadow-lg">
-                  <FileImage className="h-10 w-10 text-white" />
+                <div className="flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-r from-teal-500 to-blue-600 rounded-2xl shadow-lg">
+                  <FileImage className="h-8 w-8 sm:h-10 sm:w-10 text-white" />
                 </div>
               </div>
 
               <div>
-                <h3 className="text-2xl font-bold text-slate-800 mb-2">
+                <h3 className="text-xl sm:text-2xl font-bold text-slate-800 mb-2">
                   Upload Retinal Fundus Image
                 </h3>
-                <p className="text-slate-600 mb-4">
+                <p className="text-slate-600 mb-4 text-sm sm:text-base px-4">
                   Drag and drop your retinal scan or click to browse files
                 </p>
-                <p className="text-sm text-slate-500">
+                <p className="text-xs sm:text-sm text-slate-500 px-4">
                   Supports JPEG, PNG, TIFF • Max 10MB • High resolution recommended
                 </p>
               </div>
 
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
                 <Button
                   onClick={() => fileInputRef.current?.click()}
                   size="lg"
-                  className="min-w-[160px]"
+                  className="w-full sm:w-auto min-w-[160px] min-h-[48px]"
                 >
                   <Upload className="h-5 w-5 mr-2" />
                   Browse Files
@@ -324,7 +330,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({ onImageSelect, onAnaly
                   variant="secondary"
                   onClick={startCamera}
                   size="lg"
-                  className="min-w-[160px]"
+                  className="w-full sm:w-auto min-w-[160px] min-h-[48px]"
                 >
                   <Camera className="h-5 w-5 mr-2" />
                   Use Camera
@@ -376,7 +382,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({ onImageSelect, onAnaly
             <Button
               onClick={analyzeImage}
               size="lg"
-              className="min-w-[200px]"
+              className="w-full sm:w-auto min-w-[200px] min-h-[48px]"
               loading={analyzing}
             >
               <Eye className="h-5 w-5 mr-2" />
