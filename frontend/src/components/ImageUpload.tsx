@@ -37,23 +37,33 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({ onImageSelect, onAnaly
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   const validateFile = useCallback((file: File): boolean => {
-    // Healthcare-specific validations
+    // Healthcare-specific validations for retinal images
     const allowedTypes = ['image/jpeg', 'image/png', 'image/tiff'];
     const maxSize = 10 * 1024 * 1024; // 10MB for high-quality retinal images
     const minSize = 100 * 1024; // 100KB minimum for quality
 
     if (!allowedTypes.includes(file.type)) {
-      setError('Please upload a JPEG, PNG, or TIFF image file.');
+      setError('Please upload a JPEG, PNG, or TIFF retinal fundus image file.');
       return false;
     }
 
     if (file.size > maxSize) {
-      setError('Image file must be smaller than 10MB.');
+      setError('Retinal image file must be smaller than 10MB.');
       return false;
     }
 
     if (file.size < minSize) {
-      setError('Image file appears too small. Please ensure high-quality retinal images.');
+      setError('Image file appears too small. Please ensure high-quality retinal fundus images for accurate analysis.');
+      return false;
+    }
+
+    // Check filename for obvious non-medical files
+    const fileName = file.name.toLowerCase();
+    const nonMedicalTerms = ['screenshot', 'desktop', 'wallpaper', 'logo', 'icon', 'avatar', 'profile', 'selfie'];
+    const hasNonMedicalTerms = nonMedicalTerms.some(term => fileName.includes(term));
+    
+    if (hasNonMedicalTerms) {
+      setError('This appears to be a non-medical image. Please upload a retinal fundus photograph.');
       return false;
     }
 
@@ -214,7 +224,10 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({ onImageSelect, onAnaly
       const errorMessage = error instanceof Error ? error.message : 'Analysis failed. Please try again.';
       setError(errorMessage);
       
-      console.error('Analysis error:', error);
+      // Don't log technical errors to console in production
+      if (process.env.NODE_ENV === 'development') {
+        console.error('Analysis error:', error);
+      }
     }
   }, [selectedFile, onAnalysisComplete, analysisProgress]);
 
@@ -310,10 +323,15 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({ onImageSelect, onAnaly
                   Upload Retinal Fundus Image
                 </h3>
                 <p className="text-slate-600 mb-4 text-sm sm:text-base px-4">
-                  Drag and drop your retinal scan or click to browse files
+                  Drag and drop your retinal fundus photograph or click to browse files
                 </p>
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mx-4 mb-4">
+                  <p className="text-xs sm:text-sm text-blue-800 font-medium">
+                    ⚠️ Medical Image Requirement: Only upload retinal fundus images for diabetic retinopathy analysis
+                  </p>
+                </div>
                 <p className="text-xs sm:text-sm text-slate-500 px-4">
-                  Supports JPEG, PNG, TIFF • Max 10MB • High resolution recommended
+                  Supports JPEG, PNG, TIFF • Max 10MB • Medical retinal images only
                 </p>
               </div>
 

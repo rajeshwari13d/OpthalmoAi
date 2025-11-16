@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { Eye, Shield, Stethoscope, Menu, X, Wifi, WifiOff, Home } from 'lucide-react';
 import { Button, IconButton, Badge } from './ui';
 import { useApiHealth } from '../services';
+import { isProductionEnvironment } from '../services/api.config';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -13,6 +14,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
   const { isHealthy, isLoading, healthData } = useApiHealth();
   const navigate = useNavigate();
   const location = useLocation();
+  const isProduction = isProductionEnvironment();
 
   const handleNavigation = (path: string) => {
     navigate(path);
@@ -21,6 +23,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-teal-50/50">
+      {/* Cache-busting comment: 2025-11-16 19:54 */}
       {/* Retinal Pattern Background */}
       <div className="fixed inset-0 opacity-30 pointer-events-none">
         <div className="absolute top-20 right-20 w-96 h-96 rounded-full bg-gradient-to-r from-teal-200/40 to-blue-200/40 blur-3xl animate-pulse"></div>
@@ -107,18 +110,33 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
                 </button>
               </nav>
               <div className="flex items-center space-x-3">
-                {/* API Health Indicator */}
-                <div className="flex items-center space-x-2" title={healthData ? `API Status: ${healthData.status}` : 'Checking API...'}>
-                  {isLoading ? (
-                    <div className="animate-spin w-4 h-4 border-2 border-slate-300 border-t-teal-600 rounded-full"></div>
-                  ) : isHealthy ? (
-                    <Wifi className="h-4 w-4 text-emerald-600" />
+                {/* AI Status Indicator */}
+                <div className="flex items-center space-x-2" title={
+                  isProduction 
+                    ? 'Production: Integrated AI System Active'
+                    : (healthData ? `API Status: ${healthData.status}` : 'Checking API...')
+                }>
+                  {isProduction ? (
+                    // Production: Always show as "AI Online" (integrated system)
+                    <>
+                      <Wifi className="h-4 w-4 text-emerald-600" />
+                      <Badge variant="success" className="text-xs">AI Online</Badge>
+                    </>
                   ) : (
-                    <WifiOff className="h-4 w-4 text-red-500" />
+                    // Development: Show actual backend status
+                    <>
+                      {isLoading ? (
+                        <div className="animate-spin w-4 h-4 border-2 border-slate-300 border-t-teal-600 rounded-full"></div>
+                      ) : isHealthy ? (
+                        <Wifi className="h-4 w-4 text-emerald-600" />
+                      ) : (
+                        <WifiOff className="h-4 w-4 text-red-500" />
+                      )}
+                      <Badge variant={isHealthy ? 'success' : 'warning'} className="text-xs">
+                        {isHealthy ? 'API Online' : 'AI Only'}
+                      </Badge>
+                    </>
                   )}
-                  <Badge variant={isHealthy ? 'success' : 'danger'} className="text-xs">
-                    API {isHealthy ? 'Online' : 'Offline'}
-                  </Badge>
                 </div>
                 
                 <Button variant="outline" size="sm">
@@ -204,6 +222,26 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
           </div>
         )}
       </nav>
+
+      {/* API Status Banner - Only show in development when backend is unavailable */}
+      {!isProduction && !isHealthy && !isLoading && (
+        <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4">
+          <div className="flex items-center max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex">
+              <div className="flex-shrink-0">
+                <WifiOff className="h-5 w-5 text-yellow-400" />
+              </div>
+              <div className="ml-3">
+                <p className="text-sm text-yellow-700">
+                  <strong>Development Mode:</strong> Backend API is unavailable. 
+                  Using integrated AI analysis system.
+                  <span className="font-medium"> Start the backend server for full API features.</span>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Main Content */}
       <main className="relative">

@@ -196,24 +196,115 @@ export const ResultsDisplay: React.FC<ResultsDisplayProps> = ({ result, onNewAna
           </div>
         </div>
 
-        {/* Recommendations */}
+        {/* Medical Recommendations */}
         <div className="mb-6">
-          <h3 className="text-lg font-semibold text-slate-800 mb-4 flex items-center">
-            <Eye className="h-5 w-5 mr-2 text-teal-600" />
-            Clinical Recommendations
-          </h3>
-          <div className="grid gap-3">
-            {result.recommendations.map((recommendation, index) => (
-              <div
-                key={index}
-                className="flex items-start space-x-3 p-4 bg-slate-50/80 backdrop-blur-sm rounded-xl border border-slate-200/50 hover:bg-slate-100/80 transition-colors"
-              >
-                <div className="flex-shrink-0 w-6 h-6 bg-teal-100 rounded-full flex items-center justify-center mt-0.5">
-                  <span className="text-teal-600 font-semibold text-sm">{index + 1}</span>
-                </div>
-                <p className="text-slate-700 text-sm leading-relaxed">{recommendation}</p>
+          <div className="bg-gradient-to-r from-blue-50 to-teal-50 p-6 rounded-2xl border border-blue-200/50">
+            <div className="flex items-center mb-5">
+              <div className="flex items-center justify-center w-10 h-10 bg-gradient-to-br from-blue-500 to-teal-500 rounded-xl shadow-lg mr-3">
+                <Eye className="h-5 w-5 text-white" />
               </div>
-            ))}
+              <div>
+                <h3 className="text-xl font-bold text-slate-800">Medical Recommendations</h3>
+                <p className="text-slate-600 text-sm">Evidence-based guidance for optimal care</p>
+              </div>
+            </div>
+            
+            <div className="space-y-3">
+              {result.recommendations.map((recommendation, index) => {
+                // Parse recommendation for special formatting
+                const isUrgent = recommendation.includes('URGENT') || recommendation.includes('EMERGENCY');
+                const isImportant = recommendation.includes('⚠️') || recommendation.includes('🚨');
+                const isPositive = recommendation.includes('✅') || recommendation.includes('No diabetic retinopathy');
+                
+                return (
+                  <div
+                    key={index}
+                    className={`group relative overflow-hidden rounded-xl border transition-all duration-200 hover:shadow-md ${
+                      isUrgent 
+                        ? 'bg-gradient-to-r from-red-50 to-orange-50 border-red-200 hover:border-red-300' 
+                        : isImportant
+                        ? 'bg-gradient-to-r from-amber-50 to-yellow-50 border-amber-200 hover:border-amber-300'
+                        : isPositive
+                        ? 'bg-gradient-to-r from-emerald-50 to-green-50 border-emerald-200 hover:border-emerald-300'
+                        : 'bg-gradient-to-r from-slate-50 to-blue-50 border-slate-200 hover:border-blue-300'
+                    }`}
+                  >
+                    <div className="flex items-start space-x-4 p-4">
+                      {/* Priority Indicator */}
+                      <div className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center shadow-sm ${
+                        isUrgent
+                          ? 'bg-gradient-to-br from-red-500 to-orange-500'
+                          : isImportant 
+                          ? 'bg-gradient-to-br from-amber-500 to-yellow-500'
+                          : isPositive
+                          ? 'bg-gradient-to-br from-emerald-500 to-green-500'
+                          : 'bg-gradient-to-br from-blue-500 to-teal-500'
+                      }`}>
+                        <span className="text-white font-bold text-sm">{index + 1}</span>
+                      </div>
+                      
+                      {/* Recommendation Content */}
+                      <div className="flex-1 min-w-0">
+                        <p className={`leading-relaxed ${
+                          isUrgent
+                            ? 'text-red-800 font-medium'
+                            : isImportant
+                            ? 'text-amber-800 font-medium' 
+                            : isPositive
+                            ? 'text-emerald-800'
+                            : 'text-slate-700'
+                        }`}>
+                          {recommendation}
+                        </p>
+                        
+                        {/* Priority Badge */}
+                        {(isUrgent || isImportant) && (
+                          <div className="mt-2">
+                            <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium ${
+                              isUrgent 
+                                ? 'bg-red-100 text-red-800 border border-red-200'
+                                : 'bg-amber-100 text-amber-800 border border-amber-200'
+                            }`}>
+                              {isUrgent ? '🚨 High Priority' : '⚠️ Important'}
+                            </span>
+                          </div>
+                        )}
+                        
+                        {isPositive && (
+                          <div className="mt-2">
+                            <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800 border border-emerald-200">
+                              ✅ Positive Finding
+                            </span>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                    
+                    {/* Subtle Accent Line */}
+                    <div className={`absolute left-0 top-0 w-1 h-full ${
+                      isUrgent 
+                        ? 'bg-gradient-to-b from-red-500 to-orange-500'
+                        : isImportant
+                        ? 'bg-gradient-to-b from-amber-500 to-yellow-500'
+                        : isPositive
+                        ? 'bg-gradient-to-b from-emerald-500 to-green-500'
+                        : 'bg-gradient-to-b from-blue-500 to-teal-500'
+                    }`}></div>
+                  </div>
+                );
+              })}
+            </div>
+            
+            {/* Medical Disclaimer for Recommendations */}
+            <div className="mt-4 p-3 bg-white/60 backdrop-blur-sm rounded-lg border border-blue-200/30">
+              <p className="text-xs text-slate-600 flex items-start">
+                <Shield className="h-3 w-3 text-blue-500 mr-1 mt-0.5 flex-shrink-0" />
+                <span>
+                  <strong>Medical Guidance:</strong> These recommendations are AI-generated suggestions based on image analysis. 
+                  Always consult with qualified healthcare professionals for personalized medical advice and treatment decisions.
+                </span>
+              </p>
+            </div>
           </div>
         </div>
 
@@ -255,6 +346,132 @@ export const ResultsDisplay: React.FC<ResultsDisplayProps> = ({ result, onNewAna
 
         {showDetailedInfo && (
           <div className="space-y-4 pt-4 border-t border-slate-200/50">
+            
+            {/* Clinical Analysis Details */}
+            {(result as any).analysisDetails && (
+              <div>
+                <h4 className="font-medium text-slate-800 mb-3">Clinical Analysis Details</h4>
+                <div className="grid md:grid-cols-2 gap-4 text-sm">
+                  
+                  {/* Fundus Features */}
+                  {(result as any).analysisDetails.fundusFeatures && (
+                    <div className="bg-slate-50 p-3 rounded-lg">
+                      <h5 className="font-medium text-slate-700 mb-2">Fundus Features</h5>
+                      <div className="space-y-1">
+                        <div className="flex justify-between">
+                          <span>Microaneurysms:</span>
+                          <span className="font-medium">{(result as any).analysisDetails.fundusFeatures.microaneurysms}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span>Hemorrhages:</span>
+                          <span className="font-medium">{(result as any).analysisDetails.fundusFeatures.hemorrhages}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span>Hard Exudates:</span>
+                          <span className="font-medium">{(result as any).analysisDetails.fundusFeatures.exudates}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span>Cotton Wool Spots:</span>
+                          <span className="font-medium">{(result as any).analysisDetails.fundusFeatures.cottonWoolSpots}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span>Neovascularization:</span>
+                          <span className={`font-medium ${(result as any).analysisDetails.fundusFeatures.neovascularization ? 'text-red-600' : 'text-green-600'}`}>
+                            {(result as any).analysisDetails.fundusFeatures.neovascularization ? 'Present' : 'Absent'}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Vessel Analysis */}
+                  {(result as any).analysisDetails.vesselsAnalysis && (
+                    <div className="bg-slate-50 p-3 rounded-lg">
+                      <h5 className="font-medium text-slate-700 mb-2">Vessel Analysis</h5>
+                      <div className="space-y-1">
+                        <div className="flex justify-between">
+                          <span>A/V Ratio:</span>
+                          <span className="font-medium">{(result as any).analysisDetails.vesselsAnalysis.arteriovenousRatio}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span>Caliber:</span>
+                          <span className="font-medium">{(result as any).analysisDetails.vesselsAnalysis.caliber}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span>Tortuosity:</span>
+                          <span className="font-medium">{(result as any).analysisDetails.vesselsAnalysis.tortuosity}</span>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Macular Assessment */}
+                  {(result as any).analysisDetails.macularAssessment && (
+                    <div className="bg-slate-50 p-3 rounded-lg">
+                      <h5 className="font-medium text-slate-700 mb-2">Macular Assessment</h5>
+                      <div className="space-y-1">
+                        <div className="flex justify-between">
+                          <span>Macular Edema:</span>
+                          <span className={`font-medium ${(result as any).analysisDetails.macularAssessment.edemaPresent ? 'text-red-600' : 'text-green-600'}`}>
+                            {(result as any).analysisDetails.macularAssessment.edemaPresent ? 'Present' : 'Absent'}
+                          </span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span>Foveal Reflex:</span>
+                          <span className="font-medium">{(result as any).analysisDetails.macularAssessment.fovealReflex}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span>Central Thickness:</span>
+                          <span className="font-medium">{(result as any).analysisDetails.macularAssessment.thickness}μm</span>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Enhanced Image Quality */}
+                  {result.imageQuality && (
+                    <div className="bg-slate-50 p-3 rounded-lg">
+                      <h5 className="font-medium text-slate-700 mb-2">Image Quality Metrics</h5>
+                      <div className="space-y-1">
+                        <div className="flex justify-between">
+                          <span>Overall Quality:</span>
+                          <span className="font-medium">{Math.round(result.imageQuality.qualityScore * 100)}%</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span>Brightness:</span>
+                          <span className="font-medium">{Math.round(result.imageQuality.brightness * 100)}%</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span>Contrast:</span>
+                          <span className="font-medium">{Math.round(result.imageQuality.contrast * 100)}%</span>
+                        </div>
+                        {(result.imageQuality as any).sharpness && (
+                          <div className="flex justify-between">
+                            <span>Sharpness:</span>
+                            <span className="font-medium">{Math.round((result.imageQuality as any).sharpness * 100)}%</span>
+                          </div>
+                        )}
+                        {(result.imageQuality as any).fieldCoverage && (
+                          <div className="flex justify-between">
+                            <span>Field Coverage:</span>
+                            <span className="font-medium">{Math.round((result.imageQuality as any).fieldCoverage * 100)}%</span>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  )}
+                </div>
+                
+                {/* Clinical Notes */}
+                {(result as any).clinicalNotes && (
+                  <div className="bg-blue-50 p-3 rounded-lg mt-4">
+                    <h5 className="font-medium text-blue-800 mb-2">Clinical Notes</h5>
+                    <p className="text-blue-700 text-sm">{(result as any).clinicalNotes}</p>
+                  </div>
+                )}
+              </div>
+            )}
+            
             <div>
               <h4 className="font-medium text-slate-800 mb-2">Diabetic Retinopathy Stages:</h4>
               <div className="grid gap-3 text-sm">

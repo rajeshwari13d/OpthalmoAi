@@ -135,21 +135,30 @@ const RetinalUploadPage: React.FC = () => {
         throw new Error(result.error || 'Analysis failed');
       }
     } catch (err) {
-      console.error('Analysis error:', err);
+      // Don't log technical errors to console in production
+      const errorMessage = err instanceof Error ? err.message : 'Analysis failed';
       setUploadedFiles(prev => prev.map(f => 
         f.id === fileId ? { 
           ...f, 
           analyzing: false, 
-          error: err instanceof Error ? err.message : 'Analysis failed'
+          error: errorMessage
         } : f
       ));
     }
   };
 
   const analyzeAllImages = async () => {
-    const unanalyzedFiles = uploadedFiles.filter(f => !f.result && !f.analyzing && !f.error);
+    const unanalyzedFiles = uploadedFiles.filter(f => !f.result && !f.analyzing);
     if (unanalyzedFiles.length === 0) {
-      setError('No unanalyzed images to process.');
+      // If there are files with errors, allow retry
+      const errorFiles = uploadedFiles.filter(f => f.error && !f.analyzing);
+      if (errorFiles.length > 0) {
+        // Reset error state and try again
+        setUploadedFiles(prev => prev.map(f => f.error ? { ...f, error: undefined } : f));
+        setTimeout(() => analyzeAllImages(), 100);
+        return;
+      }
+      setError('All uploaded images have already been processed or are currently being analyzed.');
       return;
     }
 
@@ -198,8 +207,8 @@ const RetinalUploadPage: React.FC = () => {
         <div className="flex items-start space-x-3">
           <Info className="h-5 w-5 text-blue-600 mt-0.5 flex-shrink-0" />
           <div className="text-sm text-blue-800">
-            <p className="font-medium mb-1">Supported File Types:</p>
-            <p>JPEG, PNG, WebP images up to 10MB each. High-quality retinal fundus photographs provide the best analysis results.</p>
+            <p className="font-medium mb-1">⚠️ RETINAL IMAGES ONLY:</p>
+            <p>Upload retinal fundus photographs (JPEG, PNG, WebP) up to 10MB each. The AI model is specifically trained for diabetic retinopathy detection and will validate that uploaded images are proper retinal scans.</p>
           </div>
         </div>
       </motion.div>

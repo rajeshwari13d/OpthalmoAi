@@ -106,9 +106,9 @@ const SplashScreen: React.FC<SplashScreenProps> = ({ onComplete }) => {
         />
         
         {/* Subtle Connection Lines */}
-        <svg className="absolute inset-0 w-full h-full opacity-10">
+        <svg className="absolute inset-0 w-full h-full opacity-10" viewBox="0 0 100 100">
           <motion.path
-            d="M 20% 25%, Q 50% 15%, 75% 33%"
+            d="M20,25 Q50,15 75,33"
             stroke="url(#gradient1)"
             strokeWidth="1"
             fill="none"
@@ -117,7 +117,7 @@ const SplashScreen: React.FC<SplashScreenProps> = ({ onComplete }) => {
             transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
           />
           <motion.path
-            d="M 50% 67%, Q 70% 50%, 80% 25%"
+            d="M50,67 Q70,50 80,25"
             stroke="url(#gradient2)"
             strokeWidth="0.8"
             fill="none"

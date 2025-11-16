@@ -162,7 +162,10 @@ const CameraCapturePage: React.FC = () => {
         throw new Error(result.error || 'Analysis failed');
       }
     } catch (err) {
-      console.error('Analysis error:', err);
+      // Don't log technical errors to console in production
+      if (process.env.NODE_ENV === 'development') {
+        console.error('Analysis error:', err);
+      }
       setError(err instanceof Error ? err.message : 'Failed to analyze captured image');
     } finally {
       setIsAnalyzing(false);

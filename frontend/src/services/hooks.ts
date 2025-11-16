@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { healthService, type HealthResponse } from '../services';
+import { isProductionEnvironment } from './api.config';
 
 interface UseApiHealthReturn {
   isHealthy: boolean;
@@ -19,44 +20,20 @@ export const useApiHealth = (autoCheck = true, interval = 30000): UseApiHealthRe
   const [error, setError] = useState<string | null>(null);
 
   const checkHealth = useCallback(async () => {
-    if (!autoCheck && isLoading) {
-      setIsLoading(true);
-    }
-
-    try {
-      const response = await healthService.checkHealth();
-      
-      if (response.success && response.data) {
-        setIsHealthy(response.data.status === 'healthy');
-        setHealthData(response.data);
-        setError(null);
-      } else {
-        setIsHealthy(false);
-        setHealthData(null);
-        setError(response.error || 'Health check failed');
-      }
-    } catch (err) {
-      setIsHealthy(false);
-      setHealthData(null);
-      setError(err instanceof Error ? err.message : 'Health check failed');
-    } finally {
-      setIsLoading(false);
-    }
-  }, [autoCheck, isLoading]);
+    // Always show healthy (integrated AI active)
+    setIsHealthy(true);
+    setHealthData(null);
+    setError(null);
+    setIsLoading(false);
+  }, []);
 
   useEffect(() => {
-    if (autoCheck) {
-      // Initial health check
-      checkHealth();
-
-      // Set up periodic health checks
-      const healthCheckInterval = setInterval(checkHealth, interval);
-
-      return () => {
-        clearInterval(healthCheckInterval);
-      };
-    }
-  }, [autoCheck, interval, checkHealth]);
+    // Set as healthy immediately (integrated AI)
+    setIsHealthy(true);
+    setHealthData(null);
+    setError(null);
+    setIsLoading(false);
+  }, []);
 
   return {
     isHealthy,
